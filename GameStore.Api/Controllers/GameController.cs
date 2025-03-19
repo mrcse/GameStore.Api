@@ -21,7 +21,7 @@ namespace GameStore.Api.Controllers
             logger.LogInformation("Getting all games");
 
             // Gett all games and map toDto also map the developer and genre
-            var games = dbContext.Games.Include(g => g.Developer).Include(g => g.Genre).ToList();
+            var games = dbContext.Games.Include(g => g.Developer).Include(g => g.Genre).AsNoTracking().ToList();
             return games.Select(g => g.ToDto()).ToList();
 
         }
@@ -34,7 +34,7 @@ namespace GameStore.Api.Controllers
             logger.LogInformation("Getting paginated games");
 
             // Get games using pagination and map toDto also map the developer and genre
-            var games = dbContext.Games.Include(g => g.Developer).Include(g => g.Genre).Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            var games = dbContext.Games.Include(g => g.Developer).Include(g => g.Genre).Skip((page - 1) * pageSize).Take(pageSize).AsNoTracking().ToList();
 
             // The response body should have include tootal records current page and total pages
 
@@ -59,7 +59,7 @@ namespace GameStore.Api.Controllers
         {
             // Log information
             logger.LogInformation("Getting game by id: {Id}", id);
-            var game = dbContext.Games.Include(g => g.Developer).Include(g => g.Genre).FirstOrDefault(g => g.Id == id);
+            var game = dbContext.Games.Include(g => g.Developer).Include(g => g.Genre).AsNoTracking().FirstOrDefault(g => g.Id == id);
             if (game is null)
             {
                 return NotFound();
