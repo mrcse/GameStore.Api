@@ -1,4 +1,5 @@
 
+using System.Threading.Tasks;
 using GameStore.Api.Data;
 using Serilog;
 
@@ -6,15 +7,15 @@ namespace GameStore.Api
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
 
-            var builder = WebApplication.CreateBuilder(args);
+            WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-            var Configuration = builder.Configuration;
+            IConfiguration Configuration = builder.Configuration;
 
             // Set enviroment to development
-            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", Configuration.GetValue<string>("ASPNETCORE_ENVIRONMENT"));
+            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
 
             // Add services to the container.
 
@@ -47,7 +48,7 @@ namespace GameStore.Api
             app.MapControllers();
 
             // Migrate the database
-            app.MigrateDb();
+            await app.MigrateDbAsync();
 
             app.Run();
         }

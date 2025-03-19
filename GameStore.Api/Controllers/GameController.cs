@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using GameStore.Api.Data;
 using GameStore.Api.DTOs;
 using GameStore.Api.Entities;
@@ -15,26 +16,36 @@ namespace GameStore.Api.Controllers
 
         // Get all games
         [HttpGet(Name = "GetGames")]
-        public ActionResult<IEnumerable<GameDto>> Get()
+        public async Task<ActionResult<IEnumerable<GameDto>>> Get()
         {
             // Log information
             logger.LogInformation("Getting all games");
 
             // Gett all games and map toDto also map the developer and genre
-            var games = dbContext.Games.Include(g => g.Developer).Include(g => g.Genre).AsNoTracking().ToList();
+            var games = await dbContext.Games
+            .Include(g => g.Developer)
+            .Include(g => g.Genre)
+            .AsNoTracking()
+            .ToListAsync();
             return games.Select(g => g.ToDto()).ToList();
 
         }
 
         // Get games using pagination
         [HttpGet("GetPaginatedGames", Name = "GetPaginatedGames")]
-        public ActionResult<IEnumerable<GameDto>> GetPaginatedGames([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        public async Task<ActionResult<IEnumerable<GameDto>>> GetPaginatedGames([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             // Log information
             logger.LogInformation("Getting paginated games");
 
             // Get games using pagination and map toDto also map the developer and genre
-            var games = dbContext.Games.Include(g => g.Developer).Include(g => g.Genre).Skip((page - 1) * pageSize).Take(pageSize).AsNoTracking().ToList();
+            var games = await dbContext.Games
+            .Include(g => g.Developer)
+            .Include(g => g.Genre)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .AsNoTracking()
+            .ToListAsync();
 
             // The response body should have include tootal records current page and total pages
 
@@ -55,11 +66,16 @@ namespace GameStore.Api.Controllers
 
         // Get game by id
         [HttpGet("{id}", Name = "GetGame")]
-        public ActionResult<GameDto> Get(int id)
+        public async Task<ActionResult<GameDto>> Get(int id)
         {
             // Log information
             logger.LogInformation("Getting game by id: {Id}", id);
-            var game = dbContext.Games.Include(g => g.Developer).Include(g => g.Genre).AsNoTracking().FirstOrDefault(g => g.Id == id);
+            var game = await dbContext.Games
+            .Include(g => g.Developer)
+            .Include(g => g.Genre)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(g => g.Id == id);
+
             if (game is null)
             {
                 return NotFound();
@@ -70,12 +86,12 @@ namespace GameStore.Api.Controllers
 
         // Create a new game
         [HttpPost(Name = "CreateGame")]
-        public ActionResult<GameDto> Post([FromBody] CreateGameDto createGameDto)
+        public async Task<ActionResult<GameDto>> Post([FromBody] CreateGameDto createGameDto)
         {
             // Log information
             logger.LogInformation("Creating a new game");
 
-            var developer = dbContext.Find<Developer>(createGameDto.DeveloperId);
+            var developer = await dbContext.FindAsync<Developer>(createGameDto.DeveloperId);
 
 
             // Check if the developer exists
@@ -85,7 +101,7 @@ namespace GameStore.Api.Controllers
             }
 
 
-            var genre = dbContext.Find<Genre>(createGameDto.GenreId);
+            var genre = await dbContext.FindAsync<Genre>(createGameDto.GenreId);
 
             // Check if the genre exists
             if (genre is null)
@@ -96,20 +112,20 @@ namespace GameStore.Api.Controllers
             Game game = createGameDto.ToEntity();
 
             dbContext.Add(game);
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
             return CreatedAtRoute("GetGame", new { id = game.Id }, game.ToDto());
         }
 
 
         // Update a game
         [HttpPut("{id}", Name = "UpdateGame")]
-        public ActionResult<GameDto> Put(int id, [FromBody] UpdateGameDto updateGameDto)
+        public async Task<ActionResult<GameDto>> Put(int id, [FromBody] UpdateGameDto updateGameDto)
         {
             // Log information
             logger.LogInformation("Updating game by id: {Id}", id);
 
             // Update the game by id and update fields that are given
-            var game = dbContext.Find<Game>(id);
+            var game = await dbContext.FindAsync<Game>(id);
             if (game is null)
             {
                 return NotFound();
@@ -117,7 +133,7 @@ namespace GameStore.Api.Controllers
 
             if (updateGameDto.DeveloperId != null)
             {
-                var developer = dbContext.Find<Developer>(updateGameDto.DeveloperId);
+                var developer = await dbContext.FindAsync<Developer>(updateGameDto.DeveloperId);
                 if (developer is null)
                 {
                     return BadRequest("Developer not found");
@@ -127,7 +143,7 @@ namespace GameStore.Api.Controllers
 
             if (updateGameDto.GenreId != null)
             {
-                var genre = dbContext.Find<Genre>(updateGameDto.GenreId);
+                var genre = await dbContext.FindAsync<Genre>(updateGameDto.GenreId);
                 if (genre is null)
                 {
                     return BadRequest("Genre not found");
@@ -144,26 +160,26 @@ namespace GameStore.Api.Controllers
             game.ImageUrl = updateGameDto.ImageUrl ?? game.ImageUrl;
             game.UpdatedAt = DateTime.Now;
 
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
 
             return NoContent();
         }
 
         // Delete a game
         [HttpDelete("{id}", Name = "DeleteGame")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
             // Log information
             logger.LogInformation("Deleting game by id: {Id}", id);
 
-            var game = dbContext.Find<Game>(id);
+            var game = await dbContext.FindAsync<Game>(id);
             if (game is null)
             {
                 return NotFound();
             }
 
             dbContext.Remove(game);
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
 
             return NoContent();
         }
