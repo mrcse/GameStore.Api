@@ -1,4 +1,5 @@
 
+using GameStore.Api.Data;
 using Serilog;
 
 namespace GameStore.Api
@@ -12,9 +13,11 @@ namespace GameStore.Api
             // Add services to the container.
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            // Add Sqlite DbContext
+            builder.Services.AddSqlite<GameStoreDbContext>(builder.Configuration.GetConnectionString("DefaultConnection"));
 
             // Add Serilog
             builder.Host.UseSerilog((hostingContext, loggerConfiguration) => loggerConfiguration
@@ -31,14 +34,14 @@ namespace GameStore.Api
                 app.UseSwaggerUI();
             }
 
-            // app.UseSerilogRequestLogging(); // Log requests
-
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
 
-
             app.MapControllers();
+
+            // Migrate the database
+            app.MigrateDb();
 
             app.Run();
         }
