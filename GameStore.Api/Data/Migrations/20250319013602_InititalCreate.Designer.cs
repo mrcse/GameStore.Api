@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameStore.Api.Data.Migrations
 {
     [DbContext(typeof(GameStoreDbContext))]
-    [Migration("20250319005216_InititalCreate")]
+    [Migration("20250319013602_InititalCreate")]
     partial class InititalCreate
     {
         /// <inheritdoc />
@@ -26,34 +26,65 @@ namespace GameStore.Api.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Country")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Founded")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("LogoUrl")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Website")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.ToTable("Developers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Ubisoft"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Rockstar Games"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "CD Projekt Red"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Bethesda Game Studios"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Naughty Dog"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Nintendo"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Valve"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Epic Games"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "Blizzard Entertainment"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "Square Enix"
+                        });
                 });
 
             modelBuilder.Entity("GameStore.Api.Entities.Game", b =>
@@ -112,6 +143,58 @@ namespace GameStore.Api.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Genres");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Action"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Adventure"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "RPG"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Simulation"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Strategy"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Sports"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Puzzle"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Horror"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "MMO"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "Racing"
+                        });
                 });
 
             modelBuilder.Entity("GameStore.Api.Entities.Game", b =>

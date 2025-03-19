@@ -8,7 +8,13 @@ namespace GameStore.Api
     {
         public static void Main(string[] args)
         {
+
             var builder = WebApplication.CreateBuilder(args);
+
+            var Configuration = builder.Configuration;
+
+            // Set enviroment to development
+            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", Configuration.GetValue<string>("ASPNETCORE_ENVIRONMENT"));
 
             // Add services to the container.
 
@@ -16,8 +22,8 @@ namespace GameStore.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            // Add Sqlite DbContext
-            builder.Services.AddSqlite<GameStoreDbContext>(builder.Configuration.GetConnectionString("DefaultConnection"));
+            // Inject Sqlite DbContext
+            builder.Services.AddSqlite<GameStoreDbContext>(Configuration.GetConnectionString("DefaultConnection"));
 
             // Add Serilog
             builder.Host.UseSerilog((hostingContext, loggerConfiguration) => loggerConfiguration

@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace GameStore.Api.Data.Migrations
 {
     /// <inheritdoc />
@@ -17,14 +19,7 @@ namespace GameStore.Api.Data.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Country = table.Column<string>(type: "TEXT", nullable: true),
-                    Founded = table.Column<string>(type: "TEXT", nullable: true),
-                    Description = table.Column<string>(type: "TEXT", nullable: true),
-                    Website = table.Column<string>(type: "TEXT", nullable: true),
-                    LogoUrl = table.Column<string>(type: "TEXT", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    Name = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -75,6 +70,40 @@ namespace GameStore.Api.Data.Migrations
                         principalTable: "Genres",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Developers",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Ubisoft" },
+                    { 2, "Rockstar Games" },
+                    { 3, "CD Projekt Red" },
+                    { 4, "Bethesda Game Studios" },
+                    { 5, "Naughty Dog" },
+                    { 6, "Nintendo" },
+                    { 7, "Valve" },
+                    { 8, "Epic Games" },
+                    { 9, "Blizzard Entertainment" },
+                    { 10, "Square Enix" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Genres",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Action" },
+                    { 2, "Adventure" },
+                    { 3, "RPG" },
+                    { 4, "Simulation" },
+                    { 5, "Strategy" },
+                    { 6, "Sports" },
+                    { 7, "Puzzle" },
+                    { 8, "Horror" },
+                    { 9, "MMO" },
+                    { 10, "Racing" }
                 });
 
             migrationBuilder.CreateIndex(
