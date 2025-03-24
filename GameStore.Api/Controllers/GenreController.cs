@@ -15,7 +15,7 @@ namespace GameStore.Api.Controllers
         public async Task<ActionResult<IEnumerable<GenreDto>>> GetGenres()
         {
             logger.LogInformation("Getting all genres");
-            var genres = await dbContext.Genres.ToListAsync();
+            var genres = await dbContext.Genres.AsNoTracking().ToListAsync();
             return Ok(genres);
         }
 

@@ -16,7 +16,7 @@ namespace GameStore.Api.Controllers
         public async Task<ActionResult<IEnumerable<DeveloperDto>>> GetDevelopers()
         {
             logger.LogInformation("Getting all developers");
-            var developers = await dbContext.Developers.ToListAsync();
+            var developers = await dbContext.Developers.AsNoTracking().ToListAsync();
             return Ok(developers);
         }
     }

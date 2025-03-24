@@ -50,7 +50,7 @@ namespace GameStore.Api
             // Migrate the database
             await app.MigrateDbAsync();
 
-            app.Run();
+            await app.RunAsync();
         }
     }
 }
